@@ -1,1 +1,82 @@
-<p>todo works!</p>
+<div class="container-fluid">
+    
+    <div class="row w-100">
+        <div class="col-3">
+            <h1>Nincs elkezdve</h1>
+            <ul>
+                <li>1. elem</li>
+                <li>2. elem</li>
+            </ul>
+        </div>
+        <div class="col-3">
+            <h1>Kész</h1>
+            <ul>
+                <li>1. elem</li>
+                <li>2. elem</li>
+            </ul>
+        </div>
+        <div class="col-3">
+            <h1>Folyamatban</h1>
+            <ul>
+                <li>1. elem</li>
+                <li>2. elem</li>
+            </ul>
+        </div>
+        <div class="col-3">
+            <h1>Archivált</h1>
+            <ul>
+                <li>1. elem</li>
+                <li>2. elem</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+        <mat-form-field MatFormFieldControl>
+        <input matInput placeholder="Név" formControlName="title">
+        <mat-error *ngIf="todoForm?.get('title')?.hasError('required')">
+            ToDo elnevezése kötelező.
+        </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field MatFormFieldControl>
+        <textarea matInput placeholder="Leírás" formControlName="description"></textarea>
+        <mat-error *ngIf="todoForm?.get('description')?.hasError('required')">
+            Leírás megadása kötelező.
+        </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field MatFormFieldControl>
+        <mat-label>Státusz</mat-label>
+        <mat-select formControlName="status">
+            <mat-option value="Nincs elkezdve">Nincs elkezdve</mat-option>
+            <mat-option value="Folyamatban">Folyamatban</mat-option>
+            <mat-option value="Kész">Kész</mat-option>
+            <mat-option value="Archivált">Archivált</mat-option>
+        </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field MatFormFieldControl>
+        <mat-label>Prioritás</mat-label>
+        <mat-select formControlName="priority">
+            <mat-option value="Alacsony">Alacsony</mat-option>
+            <mat-option value="Normál">Normál</mat-option>
+            <mat-option value="Sürgős">Sürgős</mat-option>
+        </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field MatFormFieldControl>
+        <input matInput [matDatepicker]="picker" placeholder="Határidő" formControlName="deadline"
+                [min]="minDate" [max]="maxDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="todoForm?.get('deadline')?.hasError('required')">
+            Határidő megadása kötelező.
+        </mat-error>
+        </mat-form-field>
+        <br>
+        <button mat-raised-button color="primary" type="submit" [disabled]="todoForm.invalid">Save</button>
+        <button mat-raised-button color="warn" type="button" (click)="onDelete()" *ngIf="isEdit">Delete</button>
+    </form>
+</div>

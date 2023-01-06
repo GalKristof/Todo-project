@@ -1,82 +1,119 @@
 <div class="container-fluid">
     
     <div class="row w-100">
-        <div class="col-3">
-            <h1>Nincs elkezdve</h1>
-            <ul>
-                <li>1. elem</li>
-                <li>2. elem</li>
-            </ul>
-        </div>
-        <div class="col-3">
-            <h1>Kész</h1>
-            <ul>
-                <li>1. elem</li>
-                <li>2. elem</li>
-            </ul>
-        </div>
-        <div class="col-3">
-            <h1>Folyamatban</h1>
-            <ul>
-                <li>1. elem</li>
-                <li>2. elem</li>
-            </ul>
-        </div>
-        <div class="col-3">
-            <h1>Archivált</h1>
-            <ul>
-                <li>1. elem</li>
-                <li>2. elem</li>
+        <div class="col-lg-3 text-center" *ngFor="let status of ['Nincs elkezdve', 'Kész', 'Folyamatban', 'Archivált']">
+            <h1>{{ status }}</h1>
+            <h5 *ngIf="!groupedToDos[status]" class="text-danger">
+                Nem található tennivaló.
+            </h5>
+            <ul class="list-group">
+                <li class="list-group-item text-white mt-2" *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;"
+                    [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-secondary]="todo.priority==='Normál'"
+                    [class.bg-primary]="todo.priority==='Alacsony'">
+                    <input type="checkbox"/>
+                    {{ todo.title }} {{todo.status}}
+                    <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 
+                    (click)="closeOtherOpenedToDo(todo); changeCurrentOpenedToDo(todo.id); todo.expanded = !todo.expanded">
+                        <div class="arrows d-flex justify-content-center align-items-center" style="width:25px;height:25px;">
+                            <i *ngIf="!todo.expanded" class="fa fa-caret-down float-right"></i>
+                            <i *ngIf="todo.expanded" class="fa fa-caret-up float-right"></i>
+                        </div>
+                    </div>
+                    <form [formGroup]="currentTodoForm" (ngSubmit)="modifyToDo(todo)" *ngIf="todo.expanded">
+                        <div class="form-group">
+                            <label>Név</label>
+                            <input type="text" class="form-control" [ngModel]="todo.title" name="title"
+                                    formControlName="currentTitle">
+                            <mat-error *ngIf="currentTodoForm?.get('currentTitle')?.hasError('required')">
+                                ToDo elnevezése kötelező.
+                            </mat-error>        
+                        </div>
+                        <div class="form-group">
+                            <label>Leírás</label>
+                            <input type="text" class="form-control" [ngModel]="todo.description" name="description" formControlName="currentDescription">
+                            <mat-error *ngIf="currentTodoForm?.get('currentDescription')?.hasError('required')">
+                                Leírás megadása kötelező.
+                            </mat-error>  
+                        </div>
+                        <div class="form-group">
+                            <label>Státusz</label>
+                            <select class="form-control" [ngModel]="todo.status" name="status" formControlName="currentStatus">
+                              <option value="Nincs elkezdve">Nincs elkezdve</option>
+                              <option value="Folyamatban">Folyamatban</option>
+                              <option value="Kész">Kész</option>
+                              <option value="Archivált">Archivált</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Prioritás</label>
+                            <select class="form-control" [ngModel]="todo.priority" name="priority" formControlName="currentPriority">
+                              <option value="Sürgős">Sürgős</option>
+                              <option value="Normál">Normál</option>
+                              <option value="Alacsony">Alacsony</option>
+                            </select>
+                        </div>
+                        <mat-form-field MatFormFieldControl>
+                            <input matInput [matDatepicker]="picker" placeholder="Határidő" class="form-control w-100"
+                                    [min]="minDate" [max]="maxDate" [ngModel]="todo.deadline" name="deadline" formControlName="currentDeadline">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                        <p>Utoljára módosítva: {{todo.modifiedAt}}</p>
+                        <p>Készült: {{todo.createdAt}}</p>
+
+                        <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
 
 
-    <form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="todoForm" (ngSubmit)="onAdd()" *ngIf="wantNewToDo" class="mt-5 mb-5 bg-secondary w-25 p-3">
         <mat-form-field MatFormFieldControl>
-        <input matInput placeholder="Név" formControlName="title">
-        <mat-error *ngIf="todoForm?.get('title')?.hasError('required')">
-            ToDo elnevezése kötelező.
-        </mat-error>
+            <input matInput placeholder="Név" formControlName="title">
+            <mat-error *ngIf="todoForm?.get('title')?.hasError('required')">
+                ToDo elnevezése kötelező.
+            </mat-error>
         </mat-form-field>
         <br>
         <mat-form-field MatFormFieldControl>
-        <textarea matInput placeholder="Leírás" formControlName="description"></textarea>
-        <mat-error *ngIf="todoForm?.get('description')?.hasError('required')">
-            Leírás megadása kötelező.
-        </mat-error>
+            <textarea matInput placeholder="Leírás" formControlName="description"></textarea>
+            <mat-error *ngIf="todoForm?.get('description')?.hasError('required')">
+                Leírás megadása kötelező.
+            </mat-error>
         </mat-form-field>
         <br>
         <mat-form-field MatFormFieldControl>
-        <mat-label>Státusz</mat-label>
-        <mat-select formControlName="status">
-            <mat-option value="Nincs elkezdve">Nincs elkezdve</mat-option>
-            <mat-option value="Folyamatban">Folyamatban</mat-option>
-            <mat-option value="Kész">Kész</mat-option>
-            <mat-option value="Archivált">Archivált</mat-option>
-        </mat-select>
+            <mat-label>Státusz</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="Nincs elkezdve">Nincs elkezdve</mat-option>
+                <mat-option value="Folyamatban">Folyamatban</mat-option>
+                <mat-option value="Kész">Kész</mat-option>
+                <mat-option value="Archivált">Archivált</mat-option>
+            </mat-select>
         </mat-form-field>
         <br>
         <mat-form-field MatFormFieldControl>
-        <mat-label>Prioritás</mat-label>
-        <mat-select formControlName="priority">
-            <mat-option value="Alacsony">Alacsony</mat-option>
-            <mat-option value="Normál">Normál</mat-option>
-            <mat-option value="Sürgős">Sürgős</mat-option>
-        </mat-select>
+            <mat-label>Prioritás</mat-label>
+            <mat-select formControlName="priority">
+                <mat-option value="Alacsony">Alacsony</mat-option>
+                <mat-option value="Normál">Normál</mat-option>
+                <mat-option value="Sürgős">Sürgős</mat-option>
+            </mat-select>
         </mat-form-field>
         <br>
         <mat-form-field MatFormFieldControl>
-        <input matInput [matDatepicker]="picker" placeholder="Határidő" formControlName="deadline"
-                [min]="minDate" [max]="maxDate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="todoForm?.get('deadline')?.hasError('required')">
-            Határidő megadása kötelező.
-        </mat-error>
+            <input matInput [matDatepicker]="picker" placeholder="Határidő" formControlName="deadline"
+                    [min]="minDate" [max]="maxDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <br>
-        <button mat-raised-button color="primary" type="submit" [disabled]="todoForm.invalid">Save</button>
-        <button mat-raised-button color="warn" type="button" (click)="onDelete()" *ngIf="isEdit">Delete</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="todoForm.invalid" class="btn btn-success w-100">Hozzáadás</button>
+        <button *ngIf="wantNewToDo" class="newToDo mt-4 btn btn-danger w-100" (click)="wantNewToDo = false;">Mégsem</button>
     </form>
+    <button *ngIf="!wantNewToDo" class="newToDo mt-4 btn btn-success" (click)="wantNewToDo = true;">Új ToDo hozzáadása</button>
+    
 </div>

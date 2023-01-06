@@ -1,0 +1,70 @@
+{
+  "todos": [
+    {
+      "id": 0.2719659139858499,
+      "title": "Peti",
+      "description": "Jani",
+      "status": "Nincs elkezdve",
+      "priority": "Normál",
+      "createdAt": "2023-01-05T16:12:31.637Z",
+      "modifiedAt": "2023-01-06T12:07:59.417Z",
+      "deadline": "2024-10-05",
+      "expanded": false
+    },
+    {
+      "id": 0.5682059872948795,
+      "title": "Máris kész lesz!",
+      "description": "Feri",
+      "status": "Archivált",
+      "priority": "Normál",
+      "createdAt": "2023-01-05T16:12:37.884Z",
+      "modifiedAt": "2023-01-06T12:02:50.619Z",
+      "deadline": "2024-10-01T22:00:00.000Z",
+      "expanded": false
+    },
+    {
+      "id": 0.8023175269434217,
+      "title": "Miuzu",
+      "description": "Jani",
+      "status": "Folyamatban",
+      "priority": "Normál",
+      "createdAt": "2023-01-05T16:12:45.705Z",
+      "modifiedAt": "2023-01-05T16:12:45.705Z",
+      "deadline": "2024-10-05",
+      "expanded": false
+    },
+    {
+      "id": 0.9088445369492513,
+      "title": "Jajaja",
+      "description": "Jani",
+      "status": "Kész",
+      "priority": "Sürgős",
+      "createdAt": "2023-01-05T16:12:56.576Z",
+      "modifiedAt": "2023-01-06T12:08:02.099Z",
+      "deadline": "2024-10-05",
+      "expanded": false
+    },
+    {
+      "id": 0.7739584770403847,
+      "title": "Peti",
+      "description": "",
+      "status": "Nincs elkezdve",
+      "priority": "Normál",
+      "createdAt": "2023-01-05T16:12:59.865Z",
+      "modifiedAt": "2023-01-06T12:03:43.857Z",
+      "deadline": "2024-10-05",
+      "expanded": false
+    },
+    {
+      "id": 0.47357580123397947,
+      "title": "Peti",
+      "description": "Jani",
+      "status": "Nincs elkezdve",
+      "priority": "Normál",
+      "createdAt": "2023-01-05T16:13:02.022Z",
+      "modifiedAt": "2023-01-05T16:13:02.022Z",
+      "deadline": "2024-10-05",
+      "expanded": false
+    }
+  ]
+}

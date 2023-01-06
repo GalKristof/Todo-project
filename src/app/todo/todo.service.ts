@@ -7,7 +7,7 @@ import { ToDo } from '../models/todo.model';
   providedIn: 'root'
 })
 export class TodoService {
-  private serverUrl = 'http://localhost:3000/';
+  private serverUrl = 'http://localhost:3000/todos';
 
   constructor(private readonly http: HttpClient) { }
 
@@ -16,7 +16,8 @@ export class TodoService {
   };
 
   getTodo(id: number): Observable<ToDo>{
-    return this.http.get<ToDo>('${this.serverUrl}/${id}');
+    console.log(this.serverUrl + '/' + id);
+    return this.http.get<ToDo>(this.serverUrl + '/' + id);
   };
 
   getAllTodos(){
@@ -24,17 +25,14 @@ export class TodoService {
   };
 
   updateTodo(todo: ToDo){
-    return this.http.put<ToDo>('${this.serverUrl}/${id}', todo)
+    return this.http.put<ToDo>(this.serverUrl + '/' + todo.id, todo)
   };
 
   deleteTodo(id: number){
-    return this.http.delete<ToDo>('${this.serverUrl}/${id}');
+    return this.http.delete<ToDo>(this.serverUrl + '/' + id);
   };
 
   deleteAllTodos(){
-    return this.http.delete<ToDo[]>(this.serverUrl);
+    return this.http.put<ToDo[]>(this.serverUrl, []);
   };
-
-
-
 }

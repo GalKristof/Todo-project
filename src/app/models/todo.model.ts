@@ -7,4 +7,5 @@ export interface ToDo {
     createdAt: Date;
     modifiedAt: Date;
     deadline: Date;
+    expanded: boolean;
 }

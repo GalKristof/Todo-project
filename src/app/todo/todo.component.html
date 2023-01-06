@@ -10,8 +10,8 @@
                 <li class="list-group-item text-white mt-2" *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;"
                     [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-secondary]="todo.priority==='Normál'"
                     [class.bg-primary]="todo.priority==='Alacsony'">
-                    <input type="checkbox"/>
-                    {{ todo.title }} {{todo.status}}
+                    <input type="checkbox" (click)="changeSelectedStatus(todo);"/>
+                    {{ todo.title }}
                     <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 
                     (click)="closeOtherOpenedToDo(todo); changeCurrentOpenedToDo(todo.id); todo.expanded = !todo.expanded">
                         <div class="arrows d-flex justify-content-center align-items-center" style="width:25px;height:25px;">
@@ -69,8 +69,12 @@
         </div>
     </div>
 
-
-    <form [formGroup]="todoForm" (ngSubmit)="onAdd()" *ngIf="wantNewToDo" class="mt-5 mb-5 bg-secondary w-25 p-3">
+    
+    <form [formGroup]="todoForm" *ngIf="wantNewToDo || wantMultipleModify" class="mt-5 mb-5 bg-secondary w-25 p-3">
+        <h3 class="text-white" *ngIf="wantNewToDo">Új elem hozzáadása</h3>
+        <h3 class="text-white" *ngIf="wantMultipleModify">
+            <span *ngIf="groupOfSelectedToDos.length<lengthOfToDos">{{groupOfSelectedToDos.length}}</span>
+            <span *ngIf="groupOfSelectedToDos.length==lengthOfToDos">Összes</span> elem csoportos módosítása</h3>
         <mat-form-field MatFormFieldControl>
             <input matInput placeholder="Név" formControlName="title">
             <mat-error *ngIf="todoForm?.get('title')?.hasError('required')">
@@ -111,9 +115,14 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <br>
-        <button mat-raised-button color="primary" type="submit" [disabled]="todoForm.invalid" class="btn btn-success w-100">Hozzáadás</button>
-        <button *ngIf="wantNewToDo" class="newToDo mt-4 btn btn-danger w-100" (click)="wantNewToDo = false;">Mégsem</button>
+        <button mat-raised-button type="submit" [disabled]="todoForm.invalid" 
+            class="btn btn-success w-100" *ngIf="wantNewToDo" (click)="onAdd()">Hozzáadás</button>
+        <button mat-raised-button type="submit" [disabled]="todoForm.invalid" 
+            class="btn btn-warning w-100" *ngIf="wantMultipleModify" (click)="onMultipleModify()">Módosítás</button>
+        <button *ngIf="wantNewToDo" class="newToDo mt-4 btn btn-danger w-100" (click)="wantNewToDo = false;wantMultipleModify = false;">Mégsem</button>
     </form>
-    <button *ngIf="!wantNewToDo" class="newToDo mt-4 btn btn-success" (click)="wantNewToDo = true;">Új ToDo hozzáadása</button>
+    <button *ngIf="!wantNewToDo && !wantMultipleModify" class="newToDo mt-4 btn btn-success" (click)="wantNewToDo = true;">Új ToDo hozzáadása</button>
+    <button *ngIf="!wantNewToDo && !wantMultipleModify && groupOfSelectedToDos.length>1" class="newToDo mt-4 btn btn-warning ml-2" 
+        (click)="wantMultipleModify = true;">ToDo-k csoportos módosítása</button>
     
 </div>

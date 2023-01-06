@@ -20,6 +20,7 @@ export class TodoComponent implements OnInit{
   
   todo?: ToDo;
   wantNewToDo = false;
+  wantMultipleModify = false;
 
   minDate = new Date(); // mai napi dátum. Nem lehet múltba létrehozni ToDot.
   maxDate = new Date(2040, 0, 1); // max dátum 2040 jan 1.
@@ -43,6 +44,7 @@ export class TodoComponent implements OnInit{
   groupedToDos: {[key: string]: ToDo[]} = {};
   lengthOfToDos = 0;
   currentOpenedToDo = 0;
+  groupOfSelectedToDos: ToDo[] = [];
   
   constructor(
     private formBuilder: FormBuilder,
@@ -85,6 +87,26 @@ export class TodoComponent implements OnInit{
     });
   };
 
+  onMultipleModify(){
+    const numberOfSelectedToDos = this.groupOfSelectedToDos.length;
+    let i = 0;
+    for(let todo of this.groupOfSelectedToDos)
+    {
+      i++;
+      todo.title = this.todoForm.controls['title'].value,
+      todo.description = this.todoForm.controls['description'].value,
+      todo.status = this.todoForm.controls['status'].value,
+      todo.priority = this.todoForm.controls['priority'].value,
+      todo.deadline = this.todoForm.controls['deadline'].value,
+      todo.modifiedAt = new Date(),
+      todo.expanded = false
+
+      this.todoService.updateTodo(todo).subscribe(response => {
+        if(i === numberOfSelectedToDos) location.reload();
+      })
+    }
+  }
+
   expandToDo(id: number)
   {
     let expandedToDo: ToDo;
@@ -121,6 +143,13 @@ export class TodoComponent implements OnInit{
     const openedToDo = Object.values(this.groupedToDos).flat().find(x => x.id === this.currentOpenedToDo);
     if(openedToDo === undefined) return;
     openedToDo.expanded = false;
+  }
+
+  changeSelectedStatus(todo: ToDo)
+  {
+    const selectedToDoIndex = this.groupOfSelectedToDos.findIndex(x => x.id === todo.id);
+    if(selectedToDoIndex === -1) return this.groupOfSelectedToDos.push(todo);
+    return this.groupOfSelectedToDos.splice(selectedToDoIndex, 1);
   }
 
 

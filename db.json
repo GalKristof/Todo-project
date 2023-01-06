@@ -35,13 +35,13 @@
     },
     {
       "id": 0.9088445369492513,
-      "title": "Jajaja",
-      "description": "Jani",
-      "status": "Kész",
+      "title": "János",
+      "description": "János legyen szép",
+      "status": "Folyamatban",
       "priority": "Sürgős",
       "createdAt": "2023-01-05T16:12:56.576Z",
-      "modifiedAt": "2023-01-06T12:08:02.099Z",
-      "deadline": "2024-10-05",
+      "modifiedAt": "2023-01-06T12:53:00.597Z",
+      "deadline": "2023-01-25T23:00:00.000Z",
       "expanded": false
     },
     {
@@ -64,6 +64,28 @@
       "createdAt": "2023-01-05T16:13:02.022Z",
       "modifiedAt": "2023-01-05T16:13:02.022Z",
       "deadline": "2024-10-05",
+      "expanded": false
+    },
+    {
+      "id": 0.7066047917745846,
+      "title": "János",
+      "description": "János legyen szép",
+      "status": "Folyamatban",
+      "priority": "Sürgős",
+      "createdAt": "2023-01-06T12:44:03.104Z",
+      "modifiedAt": "2023-01-06T12:53:00.598Z",
+      "deadline": "2023-01-25T23:00:00.000Z",
+      "expanded": false
+    },
+    {
+      "id": 0.4230567754804655,
+      "title": "Szép estét",
+      "description": "Igen",
+      "status": "Folyamatban",
+      "priority": "Sürgős",
+      "createdAt": "2023-01-06T12:44:03.106Z",
+      "modifiedAt": "2023-01-06T12:44:58.192Z",
+      "deadline": "2023-01-20T23:00:00.000Z",
       "expanded": false
     }
   ]

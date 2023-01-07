@@ -123,14 +123,14 @@
     },
     {
       "id": 12,
-      "title": "as",
-      "description": "dasd",
+      "title": "Normális feladatot csinálni",
+      "description": "Most már tényleg",
       "status": "Nincs elkezdve",
       "priority": "Alacsony",
       "createdAt": "2023-01-07T16:09:00.000Z",
-      "modifiedAt": "2023-01-07T16:09:00.000Z",
+      "modifiedAt": "2023-01-07T16:25:45.118Z",
       "deadline": "2023-01-07T16:07:00.000Z",
-      "expanded": false
+      "expanded": true
     }
   ]
 }

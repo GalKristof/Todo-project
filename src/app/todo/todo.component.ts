@@ -58,7 +58,6 @@ export class TodoComponent implements OnInit{
       if(!this.currentTodoForm.dirty) return;
       const currentTodo = Object.values(this.groupedToDos).flat().find(x => x.id == this.currentOpenedToDo);
       if(currentTodo === undefined) return;
-      console.log(currentTodo);
       return this.modifyToDo(currentTodo);
     })
   }

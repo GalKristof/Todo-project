@@ -8,8 +8,8 @@
             </h5>
             <ul class="list-group">
                 <li class="list-group-item text-white mt-2" *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;"
-                    [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-secondary]="todo.priority==='Normál'"
-                    [class.bg-primary]="todo.priority==='Alacsony'">
+                    [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-primary]="todo.priority==='Normál'"
+                    [class.bg-secondary]="todo.priority==='Alacsony'">
                     <input type="checkbox" (click)="changeSelectedStatus(todo);"/>
                     {{ todo.title }}
                     <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 
@@ -62,7 +62,7 @@
                         <p>Utoljára módosítva: {{todo.modifiedAt}}</p>
                         <p>Készült: {{todo.createdAt}}</p>
 
-                        <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button>
+                        <!-- <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button> -->
                     </form>
                 </li>
             </ul>
@@ -75,21 +75,26 @@
         <h3 class="text-white" *ngIf="wantMultipleModify">
             <span *ngIf="groupOfSelectedToDos.length<lengthOfToDos">{{groupOfSelectedToDos.length}}</span>
             <span *ngIf="groupOfSelectedToDos.length==lengthOfToDos">Összes</span> elem csoportos módosítása</h3>
-        <mat-form-field MatFormFieldControl>
+        <div class="what-to-modify-buttons mb-2" *ngIf="wantMultipleModify">
+            <button class="btn btn-warning m-1" (click)="controlMultipleModificationElements('title')">Név</button>
+            <button class="btn btn-warning m-1" (click)="controlMultipleModificationElements('description')">Leírás</button>
+            <button class="btn btn-warning m-1" (click)="controlMultipleModificationElements('status')">Státusz</button>
+            <button class="btn btn-warning m-1" (click)="controlMultipleModificationElements('priority')">Prioritás</button>
+            <button class="btn btn-warning m-1" (click)="controlMultipleModificationElements('deadline')">Határidő</button>
+        </div>
+        <mat-form-field MatFormFieldControl *ngIf="wantNewToDo || whatToMultiplyModify.includes('title')">
             <input matInput placeholder="Név" formControlName="title">
             <mat-error *ngIf="todoForm?.get('title')?.hasError('required')">
                 ToDo elnevezése kötelező.
             </mat-error>
         </mat-form-field>
-        <br>
-        <mat-form-field MatFormFieldControl>
+        <mat-form-field MatFormFieldControl *ngIf="wantNewToDo || whatToMultiplyModify.includes('description')">
             <textarea matInput placeholder="Leírás" formControlName="description"></textarea>
             <mat-error *ngIf="todoForm?.get('description')?.hasError('required')">
                 Leírás megadása kötelező.
             </mat-error>
         </mat-form-field>
-        <br>
-        <mat-form-field MatFormFieldControl>
+        <mat-form-field MatFormFieldControl *ngIf="wantNewToDo || whatToMultiplyModify.includes('status')">
             <mat-label>Státusz</mat-label>
             <mat-select formControlName="status">
                 <mat-option value="Nincs elkezdve">Nincs elkezdve</mat-option>
@@ -98,8 +103,7 @@
                 <mat-option value="Archivált">Archivált</mat-option>
             </mat-select>
         </mat-form-field>
-        <br>
-        <mat-form-field MatFormFieldControl>
+        <mat-form-field MatFormFieldControl *ngIf="wantNewToDo || whatToMultiplyModify.includes('priority')">
             <mat-label>Prioritás</mat-label>
             <mat-select formControlName="priority">
                 <mat-option value="Alacsony">Alacsony</mat-option>
@@ -107,22 +111,24 @@
                 <mat-option value="Sürgős">Sürgős</mat-option>
             </mat-select>
         </mat-form-field>
-        <br>
-        <mat-form-field MatFormFieldControl>
+        <mat-form-field MatFormFieldControl *ngIf="wantNewToDo || whatToMultiplyModify.includes('deadline')">
             <input matInput [matDatepicker]="picker" placeholder="Határidő" formControlName="deadline"
                     [min]="minDate" [max]="maxDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <br>
         <button mat-raised-button type="submit" [disabled]="todoForm.invalid" 
             class="btn btn-success w-100" *ngIf="wantNewToDo" (click)="onAdd()">Hozzáadás</button>
-        <button mat-raised-button type="submit" [disabled]="todoForm.invalid" 
-            class="btn btn-warning w-100" *ngIf="wantMultipleModify" (click)="onMultipleModify()">Módosítás</button>
-        <button *ngIf="wantNewToDo" class="newToDo mt-4 btn btn-danger w-100" (click)="wantNewToDo = false;wantMultipleModify = false;">Mégsem</button>
+        <button mat-raised-button type="submit" [disabled]="todoForm.invalid || whatToMultiplyModify.length === 0" 
+            class="btn btn-warning w-100" *ngIf="wantMultipleModify" (click)="onMultipleModify();">Módosítás</button>
+        <button mat-raised-button type="submit" 
+            class="btn btn-danger w-100 mt-2" *ngIf="wantMultipleModify" (click)="onMultipleDelete()">Elemek törlése</button>
+        <button *ngIf="wantNewToDo || wantMultipleModify" class="newToDo mt-4 btn btn-primary w-100" 
+            (click)="wantNewToDo = false;wantMultipleModify = false;whatToMultiplyModify = [];">Mégsem</button>
     </form>
-    <button *ngIf="!wantNewToDo && !wantMultipleModify" class="newToDo mt-4 btn btn-success" (click)="wantNewToDo = true;">Új ToDo hozzáadása</button>
+    <button *ngIf="!wantNewToDo && !wantMultipleModify" class="newToDo mt-4 btn btn-success" 
+        (click)="wantNewToDo = true;setFormValidators('new')">Új ToDo hozzáadása</button>
     <button *ngIf="!wantNewToDo && !wantMultipleModify && groupOfSelectedToDos.length>1" class="newToDo mt-4 btn btn-warning ml-2" 
-        (click)="wantMultipleModify = true;">ToDo-k csoportos módosítása</button>
+        (click)="wantMultipleModify = true;setFormValidators('modify')">ToDo-k csoportos módosítása</button>
     
 </div>

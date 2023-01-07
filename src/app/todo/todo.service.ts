@@ -32,7 +32,4 @@ export class TodoService {
     return this.http.delete<ToDo>(this.serverUrl + '/' + id);
   };
 
-  deleteAllTodos(){
-    return this.http.put<ToDo[]>(this.serverUrl, []);
-  };
 }

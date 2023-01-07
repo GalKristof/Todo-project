@@ -14,22 +14,22 @@
     {
       "id": 2,
       "title": "Take the trash out",
-      "description": "Take the trash to the curb for pickup",
-      "status": "Folyamatban",
+      "description": "Vacuum all the carpets yesterday",
+      "status": "Kész",
       "priority": "Normál",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:54:00.000Z",
       "deadline": "2023-01-14T00:00:00.000Z",
-      "expanded": false
+      "expanded": true
     },
     {
       "id": 3,
       "title": "Buy groceries",
       "description": "Make a list of groceries and go shopping for them",
-      "status": "Kész",
+      "status": "Archivált",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:54:00.000Z",
       "deadline": "2023-01-14T00:00:00.000Z",
       "expanded": false
     },
@@ -37,10 +37,10 @@
       "id": 4,
       "title": "Wash the dishes",
       "description": "Wash the dirty dishes in the sink",
-      "status": "Nincs elkezdve",
+      "status": "Archivált",
       "priority": "Alacsony",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:43:21.808Z",
       "deadline": "2023-01-14T00:00:00.000Z",
       "expanded": false
     },
@@ -48,32 +48,32 @@
       "id": 5,
       "title": "Do the laundry",
       "description": "Sort the dirty laundry and start a load",
-      "status": "Folyamatban",
-      "priority": "Normál",
+      "status": "Nincs elkezdve",
+      "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
-      "deadline": "2023-01-14T00:00:00.000Z",
-      "expanded": false
+      "modifiedAt": "2023-01-07T13:55:00.000Z",
+      "deadline": "2023-01-18T23:00:00.000Z",
+      "expanded": true
     },
     {
       "id": 6,
       "title": "Mow the lawn",
-      "description": "Mow the lawn using the push mower",
-      "status": "Kész",
+      "description": "Sort the dirty laundry and start a load",
+      "status": "Folyamatban",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
-      "deadline": "2023-01-14T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:55:00.000Z",
+      "deadline": "2023-01-18T23:00:00.000Z",
       "expanded": false
     },
     {
       "id": 7,
       "title": "Pay the bills",
-      "description": "Gather all the bills and make the payments",
-      "status": "Nincs elkezdve",
-      "priority": "Alacsony",
+      "description": "Vacuum all the carpets yesterday",
+      "status": "Kész",
+      "priority": "Normál",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:54:00.000Z",
       "deadline": "2023-01-14T00:00:00.000Z",
       "expanded": false
     },
@@ -91,26 +91,35 @@
     {
       "id": 9,
       "title": "Vacuum the house",
-      "description": "Vacuum all the carpets and rugs in the house",
-      "status": "Kész",
+      "description": "Vacuum all the carpets now",
+      "status": "Nincs elkezdve",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
-      "deadline": "2023-01-14T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:55:00.000Z",
+      "deadline": "2023-01-11T23:00:00.000Z",
       "expanded": false
     },
     {
       "id": 10,
       "title": "Do the weekly meal prep",
       "description": "Prepare and portion out meals for the week",
-      "status": "Nincs elkezdve",
+      "status": "Archivált",
       "priority": "Alacsony",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T00:00:00.000Z",
+      "modifiedAt": "2023-01-07T13:43:21.806Z",
       "deadline": "2023-01-14T00:00:00.000Z",
       "expanded": false
+    },
+    {
+      "id": 11,
+      "title": "Make a ToDo application",
+      "description": "Make a ToDo application with lots of stuff to do, have things in it",
+      "status": "Folyamatban",
+      "priority": "Sürgős",
+      "createdAt": "2023-01-07T13:44:07.567Z",
+      "modifiedAt": "2023-01-07T13:56:00.000Z",
+      "deadline": "2023-01-28T23:00:00.000Z",
+      "expanded": true
     }
   ]
 }
-
-

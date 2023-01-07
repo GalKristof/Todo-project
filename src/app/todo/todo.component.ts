@@ -29,7 +29,7 @@ export class TodoComponent implements OnInit{
     description: new FormControl('', Validators.required),
     status: new FormControl('Nincs elkezdve'),
     priority: new FormControl('Alacsony'),
-    deadline: new FormControl(new Date())
+    deadline: new FormControl(this.getCurrentTime())
   });
 
   currentTodoForm: FormGroup = new FormGroup({
@@ -76,14 +76,15 @@ export class TodoComponent implements OnInit{
   }
 
   onAdd(){
+    const nextID = (Math.max(...Object.values(this.groupedToDos).flat().map(x => x.id))) + 1;
     const newTodo: ToDo = {
-      "id": Math.random(),
+      "id": nextID,
       "title": this.todoForm.controls['title'].value,
       "description": this.todoForm.controls['description'].value,
       "status": this.todoForm.controls['status'].value,
       "priority": this.todoForm.controls['priority'].value,
-      "createdAt": new Date(),
-      "modifiedAt": new Date(),
+      "createdAt": this.getCurrentTime(),
+      "modifiedAt": this.getCurrentTime(),
       "deadline": this.todoForm.controls['deadline'].value,
       "expanded": false
     }
@@ -103,7 +104,7 @@ export class TodoComponent implements OnInit{
       if(this.whatToMultiplyModify.includes('status')) todo.status = this.todoForm.controls['status'].value;
       if(this.whatToMultiplyModify.includes('priority')) todo.priority = this.todoForm.controls['priority'].value;
       if(this.whatToMultiplyModify.includes('deadline')) todo.deadline = this.todoForm.controls['deadline'].value;
-      todo.modifiedAt = new Date();
+      todo.modifiedAt = this.getCurrentTime();
       todo.expanded = false;
       this.todoService.updateTodo(todo).subscribe(response => {
          if(i === numberOfSelectedToDos) location.reload();
@@ -129,13 +130,11 @@ export class TodoComponent implements OnInit{
     let expandedToDo: ToDo;
     this.todoService.getTodo(id).subscribe(todo => {
       expandedToDo = todo;
-      console.log(expandedToDo);
     })
   }
 
   modifyToDo(todo: ToDo)
   {
-    console.log(todo);
     let isStatusChanged = false;
     if(todo.status !== this.currentTodoForm.controls['currentStatus'].value) isStatusChanged = true;
     todo.title = this.currentTodoForm.controls['currentTitle'].value;
@@ -143,7 +142,7 @@ export class TodoComponent implements OnInit{
     todo.status = this.currentTodoForm.controls['currentStatus'].value;
     todo.priority = this.currentTodoForm.controls['currentPriority'].value;
     todo.deadline = this.currentTodoForm.controls['currentDeadline'].value;
-    todo.modifiedAt = new Date();
+    todo.modifiedAt = this.getCurrentTime();
     if(isStatusChanged)
     {
       todo.expanded = false;
@@ -205,6 +204,20 @@ export class TodoComponent implements OnInit{
       this.todoForm.controls['description'].clearValidators();
       this.todoForm.updateValueAndValidity();
     }
+  }
+
+  getCurrentTime()
+  {
+    // Pontos idő YYYY:MM:DD HH:MM formátummal
+    const time = new Date();
+    const year = time.getFullYear();
+    const month = time.getMonth() + 1;
+    const date = time.getDate();
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+
+    const currentTime = new Date(`${year}-${month}-${date} ${hours}:${minutes}`);
+    return currentTime;
   }
 
 

@@ -47,17 +47,20 @@
                         <div class="form-group">
                             <label>Prioritás</label>
                             <select class="form-control" [ngModel]="todo.priority" name="priority" formControlName="currentPriority">
-                              <option value="Sürgős">Sürgős</option>
-                              <option value="Normál">Normál</option>
-                              <option value="Alacsony">Alacsony</option>
+                                <option value="Sürgős">Sürgős</option>
+                                <option value="Normál">Normál</option>
+                                <option value="Alacsony">Alacsony</option>
                             </select>
                         </div>
-                        <mat-form-field MatFormFieldControl>
-                            <input matInput [matDatepicker]="picker" placeholder="Határidő" class="form-control w-100"
-                                    [min]="minDate" [max]="maxDate" [ngModel]="todo.deadline" name="deadline" formControlName="currentDeadline">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
+                        <div class="form-group">
+                            <label>Határidő</label>
+                            <mat-form-field MatFormFieldControl>
+                                <input matInput [matDatepicker]="picker" placeholder="Határidő" class="form-control w-100"
+                                        [min]="minDate" [max]="maxDate" [ngModel]="todo.deadline" name="deadline" formControlName="currentDeadline">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
 
                         <p>Utoljára módosítva: {{todo.modifiedAt}}</p>
                         <p>Készült: {{todo.createdAt}}</p>
@@ -70,7 +73,7 @@
     </div>
 
     
-    <form [formGroup]="todoForm" *ngIf="wantNewToDo || wantMultipleModify" class="mt-5 mb-5 bg-secondary w-25 p-3">
+    <form [formGroup]="todoForm" *ngIf="wantNewToDo || wantMultipleModify" class="mt-5 mb-5 bg-secondary p-3" style="max-width: 350px;">
         <h3 class="text-white" *ngIf="wantNewToDo">Új elem hozzáadása</h3>
         <h3 class="text-white" *ngIf="wantMultipleModify">
             <span *ngIf="groupOfSelectedToDos.length<lengthOfToDos">{{groupOfSelectedToDos.length}}</span>

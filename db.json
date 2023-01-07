@@ -120,6 +120,17 @@
       "modifiedAt": "2023-01-07T13:56:00.000Z",
       "deadline": "2023-01-28T23:00:00.000Z",
       "expanded": true
+    },
+    {
+      "id": 12,
+      "title": "as",
+      "description": "dasd",
+      "status": "Nincs elkezdve",
+      "priority": "Alacsony",
+      "createdAt": "2023-01-07T16:09:00.000Z",
+      "modifiedAt": "2023-01-07T16:09:00.000Z",
+      "deadline": "2023-01-07T16:07:00.000Z",
+      "expanded": false
     }
   ]
 }

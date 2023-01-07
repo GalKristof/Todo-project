@@ -62,8 +62,8 @@
                             </mat-form-field>
                         </div>
 
-                        <p>Utoljára módosítva: {{todo.modifiedAt}}</p>
-                        <p>Készült: {{todo.createdAt}}</p>
+                        <p>Utoljára módosítva: {{dateToReadableFormat(todo.modifiedAt)}}</p>
+                        <p>Készült: {{dateToReadableFormat(todo.createdAt)}}</p>
 
                         <!-- <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button> -->
                     </form>

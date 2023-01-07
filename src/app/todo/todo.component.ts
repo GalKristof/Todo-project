@@ -29,7 +29,7 @@ export class TodoComponent implements OnInit{
     description: new FormControl('', Validators.required),
     status: new FormControl('Nincs elkezdve'),
     priority: new FormControl('Alacsony'),
-    deadline: new FormControl(this.getCurrentTime())
+    deadline: new FormControl(new Date())
   });
 
   currentTodoForm: FormGroup = new FormGroup({
@@ -83,8 +83,8 @@ export class TodoComponent implements OnInit{
       "description": this.todoForm.controls['description'].value,
       "status": this.todoForm.controls['status'].value,
       "priority": this.todoForm.controls['priority'].value,
-      "createdAt": this.getCurrentTime(),
-      "modifiedAt": this.getCurrentTime(),
+      "createdAt": new Date(),
+      "modifiedAt": new Date(),
       "deadline": this.todoForm.controls['deadline'].value,
       "expanded": false
     }
@@ -104,7 +104,7 @@ export class TodoComponent implements OnInit{
       if(this.whatToMultiplyModify.includes('status')) todo.status = this.todoForm.controls['status'].value;
       if(this.whatToMultiplyModify.includes('priority')) todo.priority = this.todoForm.controls['priority'].value;
       if(this.whatToMultiplyModify.includes('deadline')) todo.deadline = this.todoForm.controls['deadline'].value;
-      todo.modifiedAt = this.getCurrentTime();
+      todo.modifiedAt = new Date();
       todo.expanded = false;
       this.todoService.updateTodo(todo).subscribe(response => {
          if(i === numberOfSelectedToDos) location.reload();
@@ -142,7 +142,7 @@ export class TodoComponent implements OnInit{
     todo.status = this.currentTodoForm.controls['currentStatus'].value;
     todo.priority = this.currentTodoForm.controls['currentPriority'].value;
     todo.deadline = this.currentTodoForm.controls['currentDeadline'].value;
-    todo.modifiedAt = this.getCurrentTime();
+    todo.modifiedAt = new Date();
     if(isStatusChanged)
     {
       todo.expanded = false;
@@ -206,18 +206,11 @@ export class TodoComponent implements OnInit{
     }
   }
 
-  getCurrentTime()
-  {
-    // Pontos idő YYYY:MM:DD HH:MM formátummal
-    const time = new Date();
-    const year = time.getFullYear();
-    const month = time.getMonth() + 1;
-    const date = time.getDate();
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-
-    const currentTime = new Date(`${year}-${month}-${date} ${hours}:${minutes}`);
-    return currentTime;
+  dateToReadableFormat(date: Date) {
+    const stringDate = date.toString();
+    let newDate = stringDate.replace('-', '.').replace('-', '.').replace('T', ' ').slice(0, 16);
+  
+    return newDate;
   }
 
 

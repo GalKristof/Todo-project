@@ -1,74 +1,171 @@
 <div class="container-fluid">
     
+    <div class="row w-100 mt-4" *ngIf="showFilter">
+        <div class="col-lg-6 text-center">
+            <h3 class="filter-title">Szűrés</h3>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Elkészülés időpontja (minimum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="createdAtBeginningPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.createdAtBeginning">
+                    <mat-datepicker-toggle matSuffix [for]="createdAtBeginningPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #createdAtBeginningPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Elkészülés időpontja (maximum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="createdAtEndingPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.createdAtEnding">
+                    <mat-datepicker-toggle matSuffix [for]="createdAtEndingPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #createdAtEndingPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Módosítás időpontja (minimum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="modifiedAtBeginningPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.modifiedAtBeginning">
+                    <mat-datepicker-toggle matSuffix [for]="modifiedAtBeginningPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #modifiedAtBeginningPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Módosítás időpontja (maximum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="modifiedAtEndingPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.modifiedAtEnding">
+                    <mat-datepicker-toggle matSuffix [for]="modifiedAtEndingPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #modifiedAtEndingPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Határidő időpontja (minimum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="deadlineBeginningPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.deadlineBeginning">
+                    <mat-datepicker-toggle matSuffix [for]="deadlineBeginningPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #deadlineBeginningPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group w-50 m-0 d-inline-block">
+                <label>Határidő időpontja (maximum)</label>
+                <mat-form-field MatFormFieldControl>
+                    <input matInput [matDatepicker]="deadlineEndingPicker" placeholder="Határidő" class="w-100"
+                            [(ngModel)]="filterRules.filterAttribbutes.deadlineEnding">
+                    <mat-datepicker-toggle matSuffix [for]="deadlineEndingPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #deadlineEndingPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-lg-3 text-center">
+            <h3 class="filter-title">Rendezés</h3>
+            <div class="sort-buttons text-center">
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('title')">ABC (név) 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'titleDESC'" [class.fa-arrow-down]="currentlySortedBy == 'titleDESC' "></i>
+                </button>
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('description')">ABC (leírás) 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'descriptionDESC'" [class.fa-arrow-down]="currentlySortedBy == 'descriptionDESC' "></i>
+                </button>
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('createdAt')">Elkészülés időpontja 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'createdAtDESC'" [class.fa-arrow-down]="currentlySortedBy == 'createdAtDESC' "></i>
+                </button>
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('modifiedAt')">Módosítás időpontja 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'modifiedAtDESC'" [class.fa-arrow-down]="currentlySortedBy == 'modifiedAtDESC' "></i>
+                </button>
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('deadline')">Határidő időpontja 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'deadlineDESC'" [class.fa-arrow-down]="currentlySortedBy == 'deadlineDESC' "></i>
+                </button>
+                <button class="btn btn-primary d-block m-2" (click)="sortByAlphabet('priority')">Prioritás 
+                    <i class="fa" [class.fa-arrow-up]="currentlySortedBy !== 'priorityASC'" [class.fa-arrow-down]="currentlySortedBy == 'priorityASC' "></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-3 text-center">
+            <h3 class="filter-title">Keresés</h3>
+            <div class="form-group">
+                <label class="d-block">Név tartalmazza:</label>
+                <input type="text" [(ngModel)]="filterRules.searchAttribbutes.nameContains"/>
+            </div>
+            <div class="form-group">
+                <label class="d-block">Leírás tartalmazza:</label>
+                <input type="text" [(ngModel)]="filterRules.searchAttribbutes.descriptionContains"/>
+            </div>
+        </div>
+    </div>
+    <button class="newToDo mt-4 mb-4 btn btn-warning" (click)="showFilter = !showFilter">Szűrés | Rendezés | Keresés ki/bekapcsolása</button>
+
     <div class="row w-100">
         <div class="col-lg-3 text-center" *ngFor="let status of ['Nincs elkezdve', 'Kész', 'Folyamatban', 'Archivált']">
             <h1>{{ status }}</h1>
             <h5 *ngIf="!groupedToDos[status]" class="text-danger">
                 Nem található tennivaló.
             </h5>
-            <ul class="list-group">
-                <li class="list-group-item text-white mt-2" *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;"
+            <div class="list-group">
+                <div *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;">
+                    <div class="todo-container list-group-item text-white mt-2" *ngIf="isApplicableToFilterRules(todo);"
                     [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-primary]="todo.priority==='Normál'"
                     [class.bg-secondary]="todo.priority==='Alacsony'">
-                    <input type="checkbox" (click)="changeSelectedStatus(todo);"/>
-                    {{ todo.title }}
-                    <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 
-                    (click)="closeOtherOpenedToDo(todo); changeCurrentOpenedToDo(todo.id); todo.expanded = !todo.expanded">
-                        <div class="arrows d-flex justify-content-center align-items-center" style="width:25px;height:25px;">
-                            <i *ngIf="!todo.expanded" class="fa fa-caret-down float-right"></i>
-                            <i *ngIf="todo.expanded" class="fa fa-caret-up float-right"></i>
+                        <input type="checkbox" (click)="changeSelectedStatus(todo);"/>
+                        {{ todo.title }}
+                        <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 
+                        (click)="closeOtherOpenedToDo(todo); changeCurrentOpenedToDo(todo.id); todo.expanded = !todo.expanded">
+                            <div class="arrows d-flex justify-content-center align-items-center" style="width:25px;height:25px;">
+                                <i *ngIf="!todo.expanded" class="fa fa-caret-down float-right"></i>
+                                <i *ngIf="todo.expanded" class="fa fa-caret-up float-right"></i>
+                            </div>
                         </div>
+                        <form [formGroup]="currentTodoForm" (ngSubmit)="modifyToDo(todo)" *ngIf="todo.expanded">
+                            <div class="form-group">
+                                <label>Név</label>
+                                <input type="text" class="form-control" [ngModel]="todo.title" name="title"
+                                        formControlName="currentTitle">
+                                <mat-error *ngIf="currentTodoForm?.get('currentTitle')?.hasError('required')">
+                                    ToDo elnevezése kötelező.
+                                </mat-error>        
+                            </div>
+                            <div class="form-group">
+                                <label>Leírás</label>
+                                <input type="text" class="form-control" [ngModel]="todo.description" name="description" formControlName="currentDescription">
+                                <mat-error *ngIf="currentTodoForm?.get('currentDescription')?.hasError('required')">
+                                    Leírás megadása kötelező.
+                                </mat-error>  
+                            </div>
+                            <div class="form-group">
+                                <label>Státusz</label>
+                                <select class="form-control" [ngModel]="todo.status" name="status" formControlName="currentStatus">
+                                <option value="Nincs elkezdve">Nincs elkezdve</option>
+                                <option value="Folyamatban">Folyamatban</option>
+                                <option value="Kész">Kész</option>
+                                <option value="Archivált">Archivált</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Prioritás</label>
+                                <select class="form-control" [ngModel]="todo.priority" name="priority" formControlName="currentPriority">
+                                    <option value="Sürgős">Sürgős</option>
+                                    <option value="Normál">Normál</option>
+                                    <option value="Alacsony">Alacsony</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Határidő</label>
+                                <mat-form-field MatFormFieldControl>
+                                    <input matInput [matDatepicker]="picker" placeholder="Határidő" class="form-control w-100"
+                                            [min]="minDate" [max]="maxDate" [ngModel]="todo.deadline" name="deadline" formControlName="currentDeadline">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <p>Utoljára módosítva: {{dateToReadableFormat(todo.modifiedAt)}}</p>
+                            <p>Készült: {{dateToReadableFormat(todo.createdAt)}}</p>
+
+                            <!-- <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button> -->
+                        </form>
                     </div>
-                    <form [formGroup]="currentTodoForm" (ngSubmit)="modifyToDo(todo)" *ngIf="todo.expanded">
-                        <div class="form-group">
-                            <label>Név</label>
-                            <input type="text" class="form-control" [ngModel]="todo.title" name="title"
-                                    formControlName="currentTitle">
-                            <mat-error *ngIf="currentTodoForm?.get('currentTitle')?.hasError('required')">
-                                ToDo elnevezése kötelező.
-                            </mat-error>        
-                        </div>
-                        <div class="form-group">
-                            <label>Leírás</label>
-                            <input type="text" class="form-control" [ngModel]="todo.description" name="description" formControlName="currentDescription">
-                            <mat-error *ngIf="currentTodoForm?.get('currentDescription')?.hasError('required')">
-                                Leírás megadása kötelező.
-                            </mat-error>  
-                        </div>
-                        <div class="form-group">
-                            <label>Státusz</label>
-                            <select class="form-control" [ngModel]="todo.status" name="status" formControlName="currentStatus">
-                              <option value="Nincs elkezdve">Nincs elkezdve</option>
-                              <option value="Folyamatban">Folyamatban</option>
-                              <option value="Kész">Kész</option>
-                              <option value="Archivált">Archivált</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Prioritás</label>
-                            <select class="form-control" [ngModel]="todo.priority" name="priority" formControlName="currentPriority">
-                                <option value="Sürgős">Sürgős</option>
-                                <option value="Normál">Normál</option>
-                                <option value="Alacsony">Alacsony</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Határidő</label>
-                            <mat-form-field MatFormFieldControl>
-                                <input matInput [matDatepicker]="picker" placeholder="Határidő" class="form-control w-100"
-                                        [min]="minDate" [max]="maxDate" [ngModel]="todo.deadline" name="deadline" formControlName="currentDeadline">
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-
-                        <p>Utoljára módosítva: {{dateToReadableFormat(todo.modifiedAt)}}</p>
-                        <p>Készült: {{dateToReadableFormat(todo.createdAt)}}</p>
-
-                        <!-- <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button> -->
-                    </form>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -135,3 +232,5 @@
         (click)="wantMultipleModify = true;setFormValidators('modify')">ToDo-k csoportos módosítása</button>
     
 </div>
+
+<full-calendar class="mt-3 p-3" [options]="calendarOptions"></full-calendar>

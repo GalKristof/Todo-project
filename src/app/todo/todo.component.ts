@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { CalendarOptions, EventAddArg, EventDropArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 import { ToDo } from '../models/todo.model';
 import { TodoService } from './todo.service';
+
 
 type ToDosByStatus = {
   [status in 'Nincs elkezdve' | 'Folyamatban' | 'Kész' | 'Archivált']: ToDo[]
@@ -17,10 +21,32 @@ type ToDosByStatus = {
 
 export class TodoComponent implements OnInit{
   
+  
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin, interactionPlugin],
+    eventStartEditable: true,
+    eventDurationEditable: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,dayGridWeek,dayGridDay'
+    },
+    height: "650px",
+    eventClick: function(info){
+      console.log(info.event.id);
+      console.log(info.view);
+      console.log(info.jsEvent);
+    },
+    eventDrop: (info) => {
+      this.handleEventDrop(info);
+    }
+  }
+  
   wantNewToDo = false;
   wantMultipleModify = false;
   whatToMultiplyModify: string[] = [];
-
+  
   minDate = new Date(); // mai napi dátum. Nem lehet múltba létrehozni ToDot.
   maxDate = new Date(2040, 0, 1); // max dátum 2040 jan 1.
   
@@ -31,7 +57,7 @@ export class TodoComponent implements OnInit{
     priority: new FormControl('Alacsony'),
     deadline: new FormControl(new Date())
   });
-
+  
   currentTodoForm: FormGroup = new FormGroup({
     currentTitle: new FormControl('', Validators.required),
     currentDescription: new FormControl('', Validators.required),
@@ -39,36 +65,71 @@ export class TodoComponent implements OnInit{
     currentPriority: new FormControl(''),
     currentDeadline: new FormControl('')
   }, {updateOn: 'blur'})
-
+  
   groupedToDos: {[key: string]: ToDo[]} = {};
   lengthOfToDos = 0;
   currentOpenedToDo = 0;
   groupOfSelectedToDos: ToDo[] = [];
+
+  
+  showFilter = true;
+  filterRules = {
+    filterAttribbutes: {
+      createdAtBeginning : new Date(2023, 0, 1),
+      createdAtEnding : new Date(2024, 0, 1),
+      modifiedAtBeginning : new Date(2023, 0, 1),
+      modifiedAtEnding : new Date(2024, 0, 1),
+      deadlineBeginning : new Date(2023, 0, 1),
+      deadlineEnding: new Date(2024, 0, 1),
+      priorityLow: true,
+      priorityMid: true,
+      priorityHigh: true
+    },
+    searchAttribbutes: {
+      nameContains: "",
+      descriptionContains: ""
+    }
+  }
+
   
   constructor(
     private todoService: TodoService
-  ){};
+    ){};
     
-  ngOnInit(): void {
-    this.todoService.getAllTodos().subscribe(todos => {
+    ngOnInit(): void {
+      this.todoService.getAllTodos().subscribe(todos => {
       this.groupedToDos = this.groupTodosByStatus(todos);
+      let calendarEvents = [];
+      for(let i = 0; i < todos.length; i++)
+      {
+        let todo = todos[i]
+        let event = {
+          id: todo.id.toString(),
+          title: todo.title,
+          date: todo.deadline,
+          editable: true,
+          droppable: true,
+          draggable: true
+        }
+        calendarEvents.push(event);
+      }
+      this.calendarOptions.events = calendarEvents;
     });
 
     this.currentTodoForm.valueChanges.subscribe(selectedValue => {
       if(!this.currentTodoForm.dirty) return;
-      const currentTodo = Object.values(this.groupedToDos).flat().find(x => x.id == this.currentOpenedToDo);
+      const currentTodo = this.findToDoById(this.currentOpenedToDo);
       if(currentTodo === undefined) return;
       return this.modifyToDo(currentTodo);
     })
+
   }
 
   groupTodosByStatus(todos: ToDo[]): ToDosByStatus {
     this.lengthOfToDos = todos.length;
     return todos.reduce((acc, curr) => {
     curr.expanded = false;
-    if (!acc[curr.status]) {
-    acc[curr.status] = [];
-    }
+    if (!acc[curr.status]) acc[curr.status] = [];
     acc[curr.status]?.push(curr);
     return acc;
     }, {} as ToDosByStatus);
@@ -124,14 +185,6 @@ export class TodoComponent implements OnInit{
      }
   }
 
-  expandToDo(id: number)
-  {
-    let expandedToDo: ToDo;
-    this.todoService.getTodo(id).subscribe(todo => {
-      expandedToDo = todo;
-    })
-  }
-
   modifyToDo(todo: ToDo)
   {
     let isStatusChanged = false;
@@ -149,9 +202,10 @@ export class TodoComponent implements OnInit{
     }
     this.todoService.updateTodo(todo).subscribe(response => {
       if(isStatusChanged) location.reload();
+      console.log(todo);
     });
   }
-  
+ 
 
   changeCurrentOpenedToDo(id: number)
   {
@@ -162,7 +216,7 @@ export class TodoComponent implements OnInit{
   closeOtherOpenedToDo(todo: ToDo)
   {
     if(this.currentOpenedToDo === todo.id || this.currentOpenedToDo === 0) return;
-    const openedToDo = Object.values(this.groupedToDos).flat().find(x => x.id === this.currentOpenedToDo);
+    const openedToDo = this.findToDoById(this.currentOpenedToDo);
     if(openedToDo === undefined) return;
     openedToDo.expanded = false;
     this.currentTodoForm.reset();
@@ -210,6 +264,98 @@ export class TodoComponent implements OnInit{
     let newDate = stringDate.replace('-', '.').replace('-', '.').replace('T', ' ').slice(0, 16);
   
     return newDate;
+  }
+
+  findToDoById(id: number) :ToDo | undefined{
+    return Object.values(this.groupedToDos).flat().find(x => x.id === id)
+  }
+
+  handleEventDrop(info: EventDropArg)
+  {
+    const todo = this.findToDoById(Number(info.event.id));
+    if(todo === undefined || info.event.start === null) return;
+    this.closeOtherOpenedToDo(todo);
+    todo.modifiedAt = new Date();
+    todo.deadline = info.event.start;
+
+    this.todoService.updateTodo(todo).subscribe(response => {
+      location.reload();
+      console.log(todo);
+    });
+  }
+
+  isApplicableToFilterRules(todo: ToDo)
+  {
+    if(
+      new Date(todo.createdAt) >= this.filterRules.filterAttribbutes.createdAtBeginning // A ToDo később lett létrehozva, mint a megadott intervallum kezdőértéke
+      && new Date(todo.createdAt) <= this.filterRules.filterAttribbutes.createdAtEnding // de hamarabb, mint a megadott intervallum befejezett értéke
+      && new Date(todo.modifiedAt) >= this.filterRules.filterAttribbutes.modifiedAtBeginning // A ToDo később lett (legutoljára) módosítva, mint a megadott intervallum kezdőértéke
+      && new Date(todo.modifiedAt) <= this.filterRules.filterAttribbutes.modifiedAtEnding // de hamarabb, mint a megadott intervallum befejezett értéke
+      && new Date(todo.deadline) >= this.filterRules.filterAttribbutes.deadlineBeginning // A ToDo határideje későbbi, mint a megadott intervallum kezdőértéke
+      && new Date(todo.deadline) <= this.filterRules.filterAttribbutes.deadlineEnding // de hamarabb, mint a megadott intervallum befejezett értéke
+      && todo.title.toLowerCase().includes(this.filterRules.searchAttribbutes.nameContains.toLowerCase()) // A ToDo neve tartalmazza a megadott szöveget
+      && todo.description.toLowerCase().includes(this.filterRules.searchAttribbutes.descriptionContains.toLowerCase()) // A ToDo leírása tartalmazza a megadott szöveget
+      && (
+              (todo.priority == "Alacsony" && this.filterRules.filterAttribbutes.priorityLow) // Alacsony prioritású ToDo akkor legyen megjelenítve, ha engedélyezett
+            || (todo.priority == "Normál" && this.filterRules.filterAttribbutes.priorityMid) // Normál prioritású ToDo akkor legyen megjelenítve, ha engedélyezett
+            || (todo.priority == "Sürgős" && this.filterRules.filterAttribbutes.priorityHigh) // Magas prioritású ToDo akkor legyen megjelenítve, ha engedélyezett
+      )
+    )
+    {
+        return true;
+    }
+
+    return false;
+  }
+
+  currentlySortedBy = "";
+  sortByAlphabet(whatToSortBy: string)
+  {
+    switch(whatToSortBy){
+      case "title":
+      case "description":
+        if(this.currentlySortedBy !== "titleDESC" && this.currentlySortedBy !== "descriptionDESC")
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => a[whatToSortBy].localeCompare(b[whatToSortBy])));
+          this.currentlySortedBy = whatToSortBy+"DESC";
+        }
+        else
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => b[whatToSortBy].localeCompare(a[whatToSortBy])));
+          this.currentlySortedBy = whatToSortBy+"ASC";
+        }
+        break;
+
+      case "createdAt":
+      case "modifiedAt":
+      case "deadline":
+        if(this.currentlySortedBy !== "createdAtDESC" && this.currentlySortedBy !== "modifiedAtDESC" && this.currentlySortedBy !== "deadlineDESC")
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => new Date(a[whatToSortBy]).getTime() - new Date(b[whatToSortBy]).getTime()));
+          this.currentlySortedBy = whatToSortBy+"DESC";
+        }
+        else
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => new Date(b[whatToSortBy]).getTime() - new Date(a[whatToSortBy]).getTime()));
+          this.currentlySortedBy = whatToSortBy+"ASC";
+        }
+        break;
+      case "priority":
+        let priorityMap = {'Sürgős': 3, 'Normál': 2, 'Alacsony': 1};
+        if(this.currentlySortedBy !== "priorityASC")
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => priorityMap[b.priority] - priorityMap[a.priority]));
+          this.currentlySortedBy = "priorityASC";
+        }
+        else
+        {
+          Object.values(this.groupedToDos).forEach(todos => todos.sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority]));
+          this.currentlySortedBy = "priorityDESC";
+        }
+        break;
+      default:
+        alert("not found");
+    }
   }
 
 

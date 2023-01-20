@@ -131,28 +131,6 @@
       "modifiedAt": "2023-01-17T21:19:28.088Z",
       "deadline": "2023-01-20T16:07:00.000Z",
       "expanded": false
-    },
-    {
-      "id": 13,
-      "title": "Feladat",
-      "description": "Feladat",
-      "status": "Kész",
-      "priority": "Sürgős",
-      "createdAt": "2023-01-19T16:03:34.655Z",
-      "modifiedAt": "2023-01-19T16:03:34.655Z",
-      "deadline": "2023-01-25T23:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 14,
-      "title": "Szeméttárolóba vinni a szemetet",
-      "description": "Kivinni a szemetet a szeméttárolóba, különítve a műanyagot",
-      "status": "Folyamatban",
-      "priority": "Normál",
-      "createdAt": "2023-01-20T14:43:53.995Z",
-      "modifiedAt": "2023-01-20T14:44:46.119Z",
-      "deadline": "2023-01-22T23:00:00.000Z",
-      "expanded": false
     }
   ]
 }

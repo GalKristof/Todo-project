@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { CalendarOptions, EventAddArg, EventDropArg } from '@fullcalendar/core';
+import { CalendarOptions, EventAddArg, EventDropArg, EventHoveringArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
@@ -21,7 +21,6 @@ type ToDosByStatus = {
 
 export class TodoComponent implements OnInit{
   
-  
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, interactionPlugin],
@@ -33,13 +32,14 @@ export class TodoComponent implements OnInit{
       right: 'dayGridMonth,dayGridWeek,dayGridDay'
     },
     height: "650px",
-    eventClick: function(info){
-      console.log(info.event.id);
-      console.log(info.view);
-      console.log(info.jsEvent);
-    },
     eventDrop: (info) => {
       this.handleEventDrop(info);
+    },
+    eventMouseEnter: (info) =>{
+      this.onCalendarEventMouseEnter(info);
+    },
+    eventMouseLeave: (info) =>{
+      this.onCalendarEventMouseLeave(info);
     }
   }
   
@@ -65,6 +65,12 @@ export class TodoComponent implements OnInit{
     currentPriority: new FormControl(''),
     currentDeadline: new FormControl('')
   }, {updateOn: 'blur'})
+
+  modalTodoForm: FormGroup = new FormGroup({
+    modalTitle: new FormControl('', Validators.required),
+    modalDescription: new FormControl('', Validators.required),
+    modalStatus: new FormControl('')
+  }, {updateOn: 'blur'})
   
   groupedToDos: {[key: string]: ToDo[]} = {};
   lengthOfToDos = 0;
@@ -72,7 +78,7 @@ export class TodoComponent implements OnInit{
   groupOfSelectedToDos: ToDo[] = [];
 
   
-  showFilter = true;
+  showFilter = false;
   filterRules = {
     filterAttribbutes: {
       createdAtBeginning : new Date(2023, 0, 1),
@@ -90,6 +96,9 @@ export class TodoComponent implements OnInit{
       descriptionContains: ""
     }
   }
+
+  currentlyHoveredToDo: ToDo | undefined;
+  currentlyClickedToDo: ToDo | undefined;
 
   
   constructor(
@@ -121,6 +130,13 @@ export class TodoComponent implements OnInit{
       const currentTodo = this.findToDoById(this.currentOpenedToDo);
       if(currentTodo === undefined) return;
       return this.modifyToDo(currentTodo);
+    })
+    
+    this.modalTodoForm.valueChanges.subscribe(selectedValue => {
+      if(!this.modalTodoForm.dirty) return;
+      const currentTodo = this.currentlyClickedToDo;
+      if(currentTodo === undefined) return;
+      return this.modifyModalToDo(currentTodo);
     })
 
   }
@@ -185,6 +201,14 @@ export class TodoComponent implements OnInit{
      }
   }
 
+  onDelete(id: number | undefined)
+  {
+    if(!id) return;
+    this.todoService.deleteTodo(id).subscribe(response => {
+      location.reload();
+    })
+  }
+
   modifyToDo(todo: ToDo)
   {
     let isStatusChanged = false;
@@ -202,7 +226,24 @@ export class TodoComponent implements OnInit{
     }
     this.todoService.updateTodo(todo).subscribe(response => {
       if(isStatusChanged) location.reload();
-      console.log(todo);
+    });
+  }
+
+  modifyModalToDo(todo: ToDo)
+  {
+    let isStatusChanged = false;
+    if(todo.status !== this.modalTodoForm.controls['modalStatus'].value) isStatusChanged = true;
+    todo.title = this.modalTodoForm.controls['modalTitle'].value;
+    todo.description = this.modalTodoForm.controls['modalDescription'].value;
+    todo.status = this.modalTodoForm.controls['modalStatus'].value;
+    todo.modifiedAt = new Date();
+    if(isStatusChanged)
+    {
+      todo.expanded = false;
+      this.currentOpenedToDo = 0;
+    }
+    this.todoService.updateTodo(todo).subscribe(response => {
+      if(isStatusChanged) location.reload();
     });
   }
  
@@ -280,10 +321,45 @@ export class TodoComponent implements OnInit{
 
     this.todoService.updateTodo(todo).subscribe(response => {
       location.reload();
-      console.log(todo);
     });
   }
 
+  onCalendarEventMouseEnter(info: EventHoveringArg)
+  {
+    this.currentlyHoveredToDo = this.findToDoById(Number(info.event._def.publicId));
+  }
+
+  onCalendarEventMouseLeave(info: EventHoveringArg)
+  {
+    this.currentlyHoveredToDo = undefined;
+  }
+
+  @HostListener('document:contextmenu', ['$event'])
+  handleEventRightClick(event: MouseEvent){
+    event.preventDefault();
+    if(this.currentlyHoveredToDo !== undefined)
+    {
+      const container = document.getElementById("modal-container");
+      if(container !== null)
+      {
+        this.currentlyClickedToDo = this.currentlyHoveredToDo;
+        container.style.display = "block";
+      }
+    }
+  }
+
+  closeModal()
+  {
+    this.currentlyClickedToDo = undefined;
+    this.currentlyHoveredToDo = undefined;
+    const container = document.getElementById("modal-container");
+    if(container !== null)
+    {
+      container.style.display = "none";
+    }
+  }
+
+  
   isApplicableToFilterRules(todo: ToDo)
   {
     if(

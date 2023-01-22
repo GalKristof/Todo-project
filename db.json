@@ -2,24 +2,13 @@
   "todos": [
     {
       "id": 1,
-      "title": "Take the dog out",
-      "description": "Take the dog for a walk around the block",
-      "status": "Nincs elkezdve",
-      "priority": "Alacsony",
+      "title": "",
+      "description": "",
+      "status": "",
+      "priority": "",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-17T21:19:24.258Z",
-      "deadline": "2023-01-25T00:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 2,
-      "title": "Take the trash out",
-      "description": "Vacuum all the carpets yesterday",
-      "status": "Kész",
-      "priority": "Normál",
-      "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-17T21:19:29.770Z",
-      "deadline": "2023-01-20T00:00:00.000Z",
+      "modifiedAt": "2023-01-22T13:44:40.587Z",
+      "deadline": "",
       "expanded": false
     },
     {
@@ -62,7 +51,7 @@
       "status": "Folyamatban",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-07T13:55:00.000Z",
+      "modifiedAt": "2023-01-22T13:54:39.374Z",
       "deadline": "2023-01-18T23:00:00.000Z",
       "expanded": false
     },
@@ -75,39 +64,6 @@
       "createdAt": "2023-01-07T00:00:00.000Z",
       "modifiedAt": "2023-01-17T21:19:22.380Z",
       "deadline": "2023-01-27T00:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 8,
-      "title": "Clean the bathroom",
-      "description": "Do not Make a list of groceries and go shopping for them",
-      "status": "Archivált",
-      "priority": "Sürgős",
-      "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-17T21:19:58.437Z",
-      "deadline": "2023-01-17T00:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 9,
-      "title": "Vacuum the house",
-      "description": "Vacuum all the carpets now",
-      "status": "Nincs elkezdve",
-      "priority": "Sürgős",
-      "createdAt": "2023-01-07T00:00",
-      "modifiedAt": "2023-01-17T21:19:18.725Z",
-      "deadline": "2023-01-27T23:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 10,
-      "title": "Do the weekly meal prep",
-      "description": "Prepare and portion out meals for the week",
-      "status": "Archivált",
-      "priority": "Alacsony",
-      "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-17T21:19:20.884Z",
-      "deadline": "2023-01-26T00:00:00.000Z",
       "expanded": false
     },
     {
@@ -134,24 +90,13 @@
     },
     {
       "id": 13,
-      "title": "Feladat",
-      "description": "Feladat",
+      "title": "Legyen itt egy feladat",
+      "description": "Feladat legyen a feladatnak a leírása",
       "status": "Kész",
       "priority": "Sürgős",
       "createdAt": "2023-01-19T16:03:34.655Z",
-      "modifiedAt": "2023-01-19T16:03:34.655Z",
+      "modifiedAt": "2023-01-22T13:55:30.322Z",
       "deadline": "2023-01-25T23:00:00.000Z",
-      "expanded": false
-    },
-    {
-      "id": 14,
-      "title": "Szeméttárolóba vinni a szemetet",
-      "description": "Kivinni a szemetet a szeméttárolóba, különítve a műanyagot",
-      "status": "Folyamatban",
-      "priority": "Normál",
-      "createdAt": "2023-01-20T14:43:53.995Z",
-      "modifiedAt": "2023-01-20T14:44:46.119Z",
-      "deadline": "2023-01-22T23:00:00.000Z",
       "expanded": false
     }
   ]

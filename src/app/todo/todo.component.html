@@ -1,6 +1,6 @@
 <div class="container-fluid">
     
-    <div class="row w-100 mt-4" *ngIf="showFilter">
+    <div class="filter-container row w-100 mt-4" *ngIf="showFilter">
         <div class="col-lg-6 text-center">
             <h3 class="filter-title">Szűrés</h3>
             <div class="form-group w-50 m-0 d-inline-block">
@@ -134,10 +134,10 @@
                             <div class="form-group">
                                 <label>Státusz</label>
                                 <select class="form-control" [ngModel]="todo.status" name="status" formControlName="currentStatus">
-                                <option value="Nincs elkezdve">Nincs elkezdve</option>
-                                <option value="Folyamatban">Folyamatban</option>
-                                <option value="Kész">Kész</option>
-                                <option value="Archivált">Archivált</option>
+                                    <option value="Nincs elkezdve">Nincs elkezdve</option>
+                                    <option value="Folyamatban">Folyamatban</option>
+                                    <option value="Kész">Kész</option>
+                                    <option value="Archivált">Archivált</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -161,7 +161,7 @@
                             <p>Utoljára módosítva: {{dateToReadableFormat(todo.modifiedAt)}}</p>
                             <p>Készült: {{dateToReadableFormat(todo.createdAt)}}</p>
 
-                            <!-- <button [disabled]="currentTodoForm.invalid" class="btn btn-warning">Módosítás</button> -->
+                            <button class="btn btn-warning" (click)="onDelete(todo.id);">ToDo törlése</button>
                         </form>
                     </div>
                 </div>
@@ -231,6 +231,35 @@
     <button *ngIf="!wantNewToDo && !wantMultipleModify && groupOfSelectedToDos.length>1" class="newToDo mt-4 btn btn-warning ml-2" 
         (click)="wantMultipleModify = true;setFormValidators('modify')">ToDo-k csoportos módosítása</button>
     
+    <full-calendar class="mt-3 p-3" [options]="calendarOptions"></full-calendar>
+    <div class="modal-container w-50 bg-secondary text-white text-center position-fixed p-3" id="modal-container">
+        <form [formGroup]="modalTodoForm">
+            <h2 class="mb-3">ToDo szerkesztése</h2>
+            <mat-form-field MatFormFieldControl class="d-block w-75 m-auto">
+                <input matInput placeholder="Név" class="form-control" formControlName="modalTitle" [ngModel]="currentlyClickedToDo?.title">
+                <mat-error>
+                    ToDo elnevezése kötelező.
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field MatFormFieldControl class="d-block w-75 m-auto">
+                <textarea matInput placeholder="Leírás" formControlName="modalDescription" [ngModel]="currentlyClickedToDo?.description"></textarea>
+                <mat-error>
+                    Leírás megadása kötelező.
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field MatFormFieldControl class="d-block w-75 m-auto">
+                <mat-label>Státusz</mat-label>
+                <mat-select formControlName="modalStatus" [ngModel]="currentlyClickedToDo?.status">
+                    <mat-option value="Nincs elkezdve">Nincs elkezdve</mat-option>
+                    <mat-option value="Folyamatban">Folyamatban</mat-option>
+                    <mat-option value="Kész">Kész</mat-option>
+                    <mat-option value="Archivált">Archivált</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+        <button class="btn btn-danger m-1" (click)="onDelete(currentlyClickedToDo?.id)">ToDo törlése</button>
+        <button class="btn btn-success m-1" (click)="closeModal();">Bezárás</button>
+    </div>
 </div>
 
-<full-calendar class="mt-3 p-3" [options]="calendarOptions"></full-calendar>
+

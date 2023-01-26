@@ -1,6 +1,6 @@
 <div class="container-fluid">
     
-    <div class="filter-container row w-100 mt-4" *ngIf="showFilter">
+    <div class="filter-container row w-100 mt-4">
         <div class="col-lg-6 text-center">
             <h3 class="filter-title">Szűrés</h3>
             <div class="form-group w-50 m-0 d-inline-block">
@@ -93,10 +93,10 @@
             </div>
         </div>
     </div>
-    <button class="newToDo mt-4 mb-4 btn btn-warning" (click)="showFilter = !showFilter">Szűrés | Rendezés | Keresés ki/bekapcsolása</button>
 
-    <div class="row w-100">
-        <div class="col-lg-3 text-center" *ngFor="let status of ['Nincs elkezdve', 'Kész', 'Folyamatban', 'Archivált']">
+    <div class="row w-100" cdkDropListGroup>
+        <div class="col-lg-3 text-center" *ngFor="let status of ['Nincs elkezdve', 'Kész', 'Folyamatban', 'Archivált']" 
+        cdkDropList (cdkDropListDropped)="handleTodoDropped($event, status)">
             <h1>{{ status }}</h1>
             <h5 *ngIf="!groupedToDos[status]" class="text-danger">
                 Nem található tennivaló.
@@ -105,7 +105,8 @@
                 <div *ngFor="let todo of groupedToDos[status]" style="cursor:pointer;">
                     <div class="todo-container list-group-item text-white mt-2" *ngIf="isApplicableToFilterRules(todo);"
                     [class.bg-danger]="todo.priority==='Sürgős'" [class.bg-primary]="todo.priority==='Normál'"
-                    [class.bg-secondary]="todo.priority==='Alacsony'">
+                    [class.bg-secondary]="todo.priority==='Alacsony'" 
+                    cdkDrag (cdkDragStarted)="handleTodoDragged(todo)">
                         <input type="checkbox" (click)="changeSelectedStatus(todo);"/>
                         {{ todo.title }}
                         <div class="arrow-container d-inline-block bg-success rounded-circle" style="width:25px;height:25px;" 

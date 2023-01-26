@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CalendarOptions, EventAddArg, EventDropArg, EventHoveringArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -78,7 +79,6 @@ export class TodoComponent implements OnInit{
   groupOfSelectedToDos: ToDo[] = [];
 
   
-  showFilter = false;
   filterRules = {
     filterAttribbutes: {
       createdAtBeginning : new Date(2023, 0, 1),
@@ -309,6 +309,34 @@ export class TodoComponent implements OnInit{
 
   findToDoById(id: number) :ToDo | undefined{
     return Object.values(this.groupedToDos).flat().find(x => x.id === id)
+  }
+
+  currentlyDraggedElement: ToDo | undefined;
+
+  handleTodoDragged(todo: ToDo)
+  {
+    this.currentlyDraggedElement = todo;
+  }
+  
+  handleTodoDropped(event: CdkDragDrop<ToDo[]>, status: string)
+  {
+    if(this.currentlyDraggedElement === undefined) return;
+    if(event.previousContainer === event.container) return moveItemInArray(this.groupedToDos[status], event.previousIndex, event.currentIndex);
+    transferArrayItem(
+      this.groupedToDos[this.currentlyDraggedElement.status],
+      this.groupedToDos[status],
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    console.log(this.currentlyDraggedElement.status);
+    this.currentlyDraggedElement['status'] = status as "Nincs elkezdve" | "Folyamatban" | "Kész" | "Archivált";
+    console.log(this.currentlyDraggedElement.status);    
+    
+    this.todoService.updateTodo(this.currentlyDraggedElement).subscribe(response => {
+      return location.reload();
+    });
+
   }
 
   handleEventDrop(info: EventDropArg)

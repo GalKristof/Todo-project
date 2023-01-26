@@ -1,26 +1,15 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "",
-      "description": "",
-      "status": "",
-      "priority": "",
-      "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-22T13:44:40.587Z",
-      "deadline": "",
-      "expanded": false
-    },
-    {
       "id": 3,
       "title": "Buy groceries",
       "description": "Make a list of groceries and go shopping for them",
-      "status": "Archivált",
+      "status": "Kész",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
-      "modifiedAt": "2023-01-17T21:20:05.969Z",
-      "deadline": "2023-01-17T00:00:00.000Z",
-      "expanded": true
+      "modifiedAt": "2023-01-24T13:40:05.688Z",
+      "deadline": "2023-01-18T00:00:00.000Z",
+      "expanded": false
     },
     {
       "id": 4,
@@ -48,7 +37,7 @@
       "id": 6,
       "title": "Mow the lawn",
       "description": "Sort the dirty laundry and start a load",
-      "status": "Folyamatban",
+      "status": "Kész",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T00:00:00.000Z",
       "modifiedAt": "2023-01-22T13:54:39.374Z",
@@ -70,18 +59,18 @@
       "id": 11,
       "title": "Make a ToDo application",
       "description": "Make a ToDo application with lots of stuff to do, have things in it",
-      "status": "Folyamatban",
+      "status": "Nincs elkezdve",
       "priority": "Sürgős",
       "createdAt": "2023-01-07T13:44:07.567Z",
-      "modifiedAt": "2023-01-07T13:56:00.000Z",
+      "modifiedAt": "2023-01-24T09:39:08.230Z",
       "deadline": "2023-01-28T23:00:00.000Z",
-      "expanded": true
+      "expanded": false
     },
     {
       "id": 12,
       "title": "Normális feladatot csinálni",
       "description": "Most már tényleg",
-      "status": "Nincs elkezdve",
+      "status": "Archivált",
       "priority": "Alacsony",
       "createdAt": "2023-01-07T16:09:00.000Z",
       "modifiedAt": "2023-01-17T21:19:28.088Z",
@@ -92,7 +81,7 @@
       "id": 13,
       "title": "Legyen itt egy feladat",
       "description": "Feladat legyen a feladatnak a leírása",
-      "status": "Kész",
+      "status": "Folyamatban",
       "priority": "Sürgős",
       "createdAt": "2023-01-19T16:03:34.655Z",
       "modifiedAt": "2023-01-22T13:55:30.322Z",

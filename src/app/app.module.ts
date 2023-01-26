@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -35,7 +36,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FullCalendarModule
+    FullCalendarModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
